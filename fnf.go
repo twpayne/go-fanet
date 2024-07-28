@@ -66,7 +66,10 @@ type FNFHardwareInfo struct {
 	FANETAddress      Optional[[3]byte]
 }
 
-var iso8859_1Decoder = charmap.ISO8859_1.NewDecoder()
+var (
+	iso8859_1Decoder = charmap.ISO8859_1.NewDecoder()
+	iso8859_1Encoder = charmap.ISO8859_1.NewEncoder()
+)
 
 func parseFNFResponse(tok *tokenizer) (*FNFResponse, error) {
 	var r FNFResponse
@@ -130,7 +133,11 @@ func (r *FNFResponse) ParsePayload() (any, error) {
 		return &fnfTracking, nil
 	case 2:
 		var fnfName FNFName
-		fnfName.Name = string(r.Payload)
+		nameBytes, err := iso8859_1Decoder.Bytes(r.Payload)
+		if err != nil {
+			return nil, err
+		}
+		fnfName.Name = string(nameBytes)
 		return &fnfName, nil
 	case 3:
 		// FIXME bounds check
@@ -225,12 +232,12 @@ func (r *FNFResponse) ParsePayload() (any, error) {
 	}
 }
 
-func (n *FNFName) Payload() (string, error) {
-	return iso8859_1Decoder.String(n.Name)
-}
-
 func (n *FNFName) FNFType() int {
 	return 2
+}
+
+func (n *FNFName) Payload() ([]byte, error) {
+	return iso8859_1Encoder.Bytes([]byte(n.Name))
 }
 
 func parseAbsoluteLatitude(data []byte) float64 {
