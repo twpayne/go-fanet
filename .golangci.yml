@@ -51,7 +51,6 @@ linters:
   - mirror
   - misspell
   - nakedret
-  - nestif
   - nilerr
   - nilnil
   - noctx
@@ -99,6 +98,7 @@ linters:
   - lll
   - maintidx
   - musttag
+  - nestif
   - nlreturn
   - nonamedreturns
   - paralleltest

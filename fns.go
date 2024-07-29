@@ -15,6 +15,7 @@ type FNSCommand struct {
 	Time            time.Time
 	GeoidSeparation Optional[float64]
 	TurnRate        Optional[float64]
+	QNEOffset       Optional[float64]
 }
 
 func parseFNSCommand(tok *tokenizer) (*FNSCommand, error) {
@@ -40,6 +41,9 @@ func parseFNSCommand(tok *tokenizer) (*FNSCommand, error) {
 	if !tok.atEndOfData() {
 		c.TurnRate = NewOptional(tok.commaFloat())
 	}
+	if !tok.atEndOfData() {
+		c.QNEOffset = NewOptional(tok.commaFloat())
+	}
 	tok.endOfData()
 	return &c, tok.err()
 }
@@ -59,17 +63,15 @@ func (c *FNSCommand) Sentence() string {
 		b.commaInt(c.Time.Hour())
 		b.commaInt(c.Time.Minute())
 		b.commaInt(c.Time.Second())
-	} else if c.Time.IsZero() && (c.GeoidSeparation.Valid || c.TurnRate.Valid) {
-		b.string(",,,,,,")
-	}
-	if c.GeoidSeparation.Valid {
-		b.commaFloat(c.GeoidSeparation.Value)
-		if c.TurnRate.Valid {
-			b.commaFloat(c.TurnRate.Value)
+		if c.GeoidSeparation.Valid {
+			b.commaFloat(c.GeoidSeparation.Value)
+			if c.TurnRate.Valid {
+				b.commaFloat(c.TurnRate.Value)
+				if c.QNEOffset.Valid {
+					b.commaFloat(c.QNEOffset.Value)
+				}
+			}
 		}
-	} else if c.TurnRate.Valid {
-		b.comma()
-		b.commaFloat(c.TurnRate.Value)
 	}
 	b.newline()
 	return b.String()
