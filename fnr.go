@@ -27,3 +27,10 @@ func parseFNRResponse(tok *tokenizer) (*FNRResponse, error) {
 	tok.endOfData()
 	return &r, tok.err()
 }
+
+func (r *FNRResponse) Err() error {
+	if r.Type != "ERR" {
+		return nil
+	}
+	return fmt.Errorf("%d: %s", r.Status, r.StatusStr)
+}
