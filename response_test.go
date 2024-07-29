@@ -17,9 +17,17 @@ func TestParseResponse(t *testing.T) {
 		expectedErr string
 	}{
 		{
-			s: "#DGR OK\n",
-			expected: &fanet.DGRResponse{
+			s: "#DBR OK\n",
+			expected: &fanet.DBRResponse{
 				Type: "OK",
+			},
+		},
+		{
+			s: "#DBR ERR,1,unknown DBG command\n",
+			expected: &fanet.DBRResponse{
+				Type:      "ERR",
+				Status:    1,
+				StatusStr: "unknown DBG command",
 			},
 		},
 		{

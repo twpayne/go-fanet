@@ -13,6 +13,7 @@ func makeResponseParser[C any](f func(*tokenizer) (C, error)) responseParser {
 }
 
 var responseParsers = map[string]responseParser{
+	"#DBR": makeResponseParser(parseDBRResponse),
 	"#DGR": makeResponseParser(parseDGRResponse),
 	"#DGV": makeResponseParser(parseDGVResponse),
 	"#FAO": makeResponseParser(parseFAOResponse),
