@@ -15,6 +15,7 @@ func makeCommandParser[C Command](f func(*tokenizer) (C, error)) commandParser {
 }
 
 var commandParsers = map[string]commandParser{
+	"#DBG": makeCommandParser(parseDBGCommand),
 	"#DGJ": makeCommandParser(parseDGJCommand),
 	"#DGL": makeCommandParser(parseDGLCommand),
 	"#DGP": makeCommandParser(parseDGPCommand),

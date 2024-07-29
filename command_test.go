@@ -17,6 +17,20 @@ func TestCommands(t *testing.T) {
 		expectedErr string
 	}{
 		{
+			s: "#DBG ALL,ALL\n",
+			expected: &fanet.DBGCommand{
+				Zones:    []string{"ALL"},
+				Severity: "ALL",
+			},
+		},
+		{
+			s: "#DBG APP|RF|RM,WARN\n",
+			expected: &fanet.DBGCommand{
+				Zones:    []string{"APP", "RF", "RM"},
+				Severity: "WARN",
+			},
+		},
+		{
 			s: "#DGJ BLstm\n",
 			expected: &fanet.DGJCommand{
 				Bootloader: "BLstm",

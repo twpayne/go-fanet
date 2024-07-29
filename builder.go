@@ -63,6 +63,11 @@ func (b *sentenceBuilder) commaInt(i int) {
 	b.int(i)
 }
 
+func (b *sentenceBuilder) commaString(s string) {
+	b.comma()
+	b.string(s)
+}
+
 func (b *sentenceBuilder) float(f float64) {
 	b.string(strconv.FormatFloat(f, 'f', -1, 64))
 }
