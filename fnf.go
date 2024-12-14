@@ -242,10 +242,10 @@ func (n *FNFName) Payload() ([]byte, error) {
 
 func parseAbsoluteLatitude(data []byte) float64 {
 	latitude := binary.LittleEndian.Uint32([]byte{data[0], data[1], data[2], 0})
-	return float64(int32(latitude<<8)>>8) / 93206
+	return float64(int32(latitude<<8)>>8) / 93206 //nolint:gosec
 }
 
 func parseAbsoluteLongitude(data []byte) float64 {
 	longitude := binary.LittleEndian.Uint32([]byte{data[0], data[1], data[2], 0})
-	return float64(int32(longitude<<8)>>8) / 46603
+	return float64(int32(longitude<<8)>>8) / 46603 //nolint:gosec
 }
