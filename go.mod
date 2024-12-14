@@ -3,8 +3,8 @@ module github.com/twpayne/go-fanet
 go 1.22.4
 
 require (
-	github.com/alecthomas/assert/v2 v2.10.0
-	golang.org/x/text v0.16.0
+	github.com/alecthomas/assert/v2 v2.11.0
+	golang.org/x/text v0.21.0
 )
 
 require (
