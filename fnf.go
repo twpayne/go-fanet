@@ -89,6 +89,10 @@ func parseFNFResponse(tok *tokenizer) (*FNFResponse, error) {
 	return &r, tok.err()
 }
 
+func (r *FNFResponse) Address() string {
+	return "FNF"
+}
+
 func (r *FNFResponse) ParsePayload() (any, error) {
 	switch r.Type {
 	case 0:

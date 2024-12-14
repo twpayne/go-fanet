@@ -24,6 +24,10 @@ func parseFARResponse(tok *tokenizer) (*FARResponse, error) {
 	return &r, tok.err()
 }
 
+func (r *FARResponse) Address() string {
+	return "FAR"
+}
+
 func (r *FARResponse) Err() error {
 	if r.Type == "OK" {
 		return nil

@@ -24,6 +24,10 @@ func parseDGRResponse(tok *tokenizer) (*DGRResponse, error) {
 	return &r, tok.err()
 }
 
+func (r *DGRResponse) Address() string {
+	return "DGR"
+}
+
 func (r *DGRResponse) Err() error {
 	if r.Type == "OK" {
 		return nil

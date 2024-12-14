@@ -25,3 +25,7 @@ func parseFNAResponse(tok *tokenizer) (*FNAResponse, error) {
 	tok.endOfData()
 	return &r, tok.err()
 }
+
+func (r *FNAResponse) Address() string {
+	return "FNA"
+}

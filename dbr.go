@@ -24,6 +24,10 @@ func parseDBRResponse(tok *tokenizer) (*DBRResponse, error) {
 	return &r, tok.err()
 }
 
+func (r *DBRResponse) Address() string {
+	return "DBR"
+}
+
 func (r *DBRResponse) Err() error {
 	if r.Type == "OK" {
 		return nil
