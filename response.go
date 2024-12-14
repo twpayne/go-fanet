@@ -2,12 +2,14 @@ package fanet
 
 import "fmt"
 
-type Response any
+type Response interface {
+	Address() string
+}
 
-type responseParser func(*tokenizer) (any, error)
+type responseParser func(*tokenizer) (Response, error)
 
-func makeResponseParser[C any](f func(*tokenizer) (C, error)) responseParser {
-	return func(tok *tokenizer) (any, error) {
+func makeResponseParser[C Response](f func(*tokenizer) (C, error)) responseParser {
+	return func(tok *tokenizer) (Response, error) {
 		return f(tok)
 	}
 }

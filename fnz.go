@@ -13,3 +13,7 @@ func parseFNZResponse(tok *tokenizer) (*FNZResponse, error) {
 	tok.endOfData()
 	return &fnz, tok.err()
 }
+
+func (r *FNZResponse) Address() string {
+	return "FNZ"
+}

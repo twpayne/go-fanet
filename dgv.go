@@ -24,3 +24,7 @@ func parseDGVResponse(tok *tokenizer) (*DGVResponse, error) {
 	tok.endOfData()
 	return &r, tok.err()
 }
+
+func (r *DGVResponse) Address() string {
+	return "DGV"
+}

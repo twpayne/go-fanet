@@ -29,3 +29,7 @@ func parseFAXResponse(tok *tokenizer) (*FAXResponse, error) {
 	tok.endOfData()
 	return &r, tok.err()
 }
+
+func (r *FAXResponse) Address() string {
+	return "FAX"
+}

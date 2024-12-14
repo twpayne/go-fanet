@@ -33,3 +33,7 @@ func parseFAOResponse(tok *tokenizer) (*FAOResponse, error) {
 	tok.endOfData()
 	return &r, tok.err()
 }
+
+func (r *FAOResponse) Address() string {
+	return "FAO"
+}

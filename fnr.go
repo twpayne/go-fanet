@@ -28,6 +28,10 @@ func parseFNRResponse(tok *tokenizer) (*FNRResponse, error) {
 	return &r, tok.err()
 }
 
+func (r *FNRResponse) Address() string {
+	return "FNR"
+}
+
 func (r *FNRResponse) Err() error {
 	if r.Type != "ERR" {
 		return nil
