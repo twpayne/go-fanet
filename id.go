@@ -37,8 +37,8 @@ func (id *ID) Set(s string) error {
 	}
 	manufacturer, _ := strconv.ParseUint(m[1], 16, 8)
 	device, _ := strconv.ParseUint(m[2], 16, 16)
-	id.Manufacturer = int(manufacturer)
-	id.Device = int(device)
+	id.Manufacturer = int(manufacturer) //nolint:gosec
+	id.Device = int(device)             //nolint:gosec
 	return nil
 }
 
