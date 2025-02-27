@@ -189,6 +189,10 @@ func (t *tokenizer) header() string {
 	if t.error != nil {
 		return ""
 	}
+	if t.pos == len(t.data) {
+		t.error = errExpectedHeader
+		return ""
+	}
 	start := t.pos
 	if t.data[start] != '#' {
 		t.error = errExpectedHeader

@@ -17,6 +17,10 @@ func TestParseResponse(t *testing.T) {
 		expectedErr string
 	}{
 		{
+			s:           "",
+			expectedErr: "unexpected end of data",
+		},
+		{
 			s: "#DBR OK\n",
 			expected: &fanet.DBRResponse{
 				Type: "OK",

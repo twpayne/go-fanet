@@ -29,6 +29,9 @@ var responseParsers = map[string]responseParser{
 
 // ParseResponse parses a response from data.
 func ParseResponse(data []byte) (Response, error) {
+	if len(data) == 0 {
+		return nil, errUnexpectedEndOfData
+	}
 	tok := newTokenizer(data)
 	header := tok.header()
 	responseParser, ok := responseParsers[header]
