@@ -18,6 +18,7 @@ var responseParsers = map[string]responseParser{
 	"#DBR": makeResponseParser(parseDBRResponse),
 	"#DGR": makeResponseParser(parseDGRResponse),
 	"#DGV": makeResponseParser(parseDGVResponse),
+	"#DGP": makeResponseParser(parseDGPResponse),
 	"#FAO": makeResponseParser(parseFAOResponse),
 	"#FAR": makeResponseParser(parseFARResponse),
 	"#FAX": makeResponseParser(parseFAXResponse),

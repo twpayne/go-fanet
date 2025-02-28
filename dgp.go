@@ -17,3 +17,18 @@ func (c *DGPCommand) Sentence() string {
 	b.newline()
 	return b.String()
 }
+
+type DGPResponse struct {
+	PowerMode bool
+}
+
+func parseDGPResponse(tok *tokenizer) (*DGPResponse, error) {
+	var r DGPResponse
+	r.PowerMode = tok.int() != 0
+	tok.endOfData()
+	return &r, tok.err()
+}
+
+func (r *DGPResponse) Address() string {
+	return "DGP"
+}

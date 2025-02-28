@@ -53,6 +53,12 @@ func TestParseResponse(t *testing.T) {
 			expectedErr: "XXX: unknown DGR type",
 		},
 		{
+			s: "#DGP 1\n",
+			expected: &fanet.DGPResponse{
+				PowerMode: true,
+			},
+		},
+		{
 			s: "#DGV 1.06, 1722e538e\n",
 			expected: &fanet.DGVResponse{
 				BuildDateCode: "1.06, 1722e538e",
