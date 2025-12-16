@@ -9,6 +9,8 @@ import (
 	"golang.org/x/text/encoding/charmap"
 )
 
+var errInvalidPayload = errors.New("invalid payload")
+
 // An FNFResponse is an FNF response.
 type FNFResponse struct {
 	Source    ID
@@ -28,7 +30,7 @@ type FNFTracking struct {
 	OnlineTracking bool
 	Type           int
 	Altitude       int
-	Speed          float64
+	SpeedKPH       float64
 	Climb          float64
 	Heading        float64
 	TurnRate       Optional[float64]
@@ -96,43 +98,56 @@ func (r *FNFResponse) Address() string {
 func (r *FNFResponse) ParsePayload() (any, error) {
 	switch r.Type {
 	case 0:
-		// FIXME bounds check
+		if len(r.Payload) != 0 {
+			return nil, errInvalidPayload
+		}
 		var fnfAck FNFAck
 		return &fnfAck, nil
 	case 1:
-		// FIXME bounds check
 		var fnfTracking FNFTracking
-		fnfTracking.Latitude = parseAbsoluteLatitude(r.Payload[:3])
-		fnfTracking.Longitude = parseAbsoluteLongitude(r.Payload[3:6])
-		onlineTrackingTypeAltitude := binary.LittleEndian.Uint16(r.Payload[6:8])
-		fnfTracking.OnlineTracking = onlineTrackingTypeAltitude&0x8000 != 0
-		fnfTracking.Type = int(onlineTrackingTypeAltitude & 0x3000 >> 12)
-		fnfTracking.Altitude = int(onlineTrackingTypeAltitude & 0x7ff)
-		if onlineTrackingTypeAltitude&0x800 != 0 {
-			fnfTracking.Altitude <<= 2
-		}
-		fnfTracking.Speed = float64(r.Payload[8]) / 2
-		if r.Payload[8]&0x80 != 0 {
-			fnfTracking.Speed *= 5
-		}
-		fnfTracking.Climb = float64(int8(r.Payload[9]<<1)>>1) / 10
-		if r.Payload[9]&0x80 != 0 {
-			fnfTracking.Climb *= 5
-		}
-		fnfTracking.Heading = 360 * float64(r.Payload[10]) / 256
-		if len(r.Payload) >= 12 {
-			turnRate := float64(int8(r.Payload[11]<<1)>>1) / 4
-			if r.Payload[11]&0x80 != 0 {
-				turnRate *= 4
+		switch {
+		case len(r.Payload) >= 13:
+			if r.Payload[12]&0x80 == 0 {
+				fnfTracking.QNEOffset = NewOptional(int(r.Payload[12]))
+			} else {
+				fnfTracking.QNEOffset = NewOptional(2 * int(r.Payload[12]&^0x80))
 			}
-			fnfTracking.TurnRate = NewOptional(turnRate)
-		}
-		if len(r.Payload) >= 13 {
-			qneOffset := int(int8(r.Payload[12]<<1) >> 1)
-			if r.Payload[12]&0x80 != 0 {
-				qneOffset *= 4
+			fallthrough
+		case len(r.Payload) >= 12:
+			if r.Payload[11]&0x80 == 0 {
+				fnfTracking.TurnRate = NewOptional(float64(r.Payload[11]))
+			} else {
+				fnfTracking.TurnRate = NewOptional(4 * float64(r.Payload[11]&^0x80))
 			}
-			fnfTracking.QNEOffset = NewOptional(qneOffset)
+			fallthrough
+		case len(r.Payload) >= 11:
+			fnfTracking.Latitude = parseAbsoluteLatitude(r.Payload[:3])
+			fnfTracking.Longitude = parseAbsoluteLongitude(r.Payload[3:6])
+			onlineTrackingTypeAltitude := binary.LittleEndian.Uint16(r.Payload[6:8])
+			fnfTracking.OnlineTracking = onlineTrackingTypeAltitude&0x8000 != 0
+			fnfTracking.Type = int(onlineTrackingTypeAltitude & 0x7000 >> 12)
+
+			if onlineTrackingTypeAltitude&0x800 == 0 {
+				fnfTracking.Altitude = int(onlineTrackingTypeAltitude & 0x7ff)
+			} else {
+				fnfTracking.Altitude = 4 * int(onlineTrackingTypeAltitude&0x7ff)
+			}
+
+			if r.Payload[8]&0x80 == 0 {
+				fnfTracking.SpeedKPH = 0.5 * float64(r.Payload[8])
+			} else {
+				fnfTracking.SpeedKPH = 2.5 * float64(r.Payload[8]&^0x80)
+			}
+
+			if r.Payload[9]&0x80 == 0 {
+				fnfTracking.Climb = 0.1 * float64(int8(r.Payload[9]))
+			} else {
+				fnfTracking.Climb = 0.5 * float64(int8(r.Payload[9]&^0x80))
+			}
+
+			fnfTracking.Heading = 360 * float64(r.Payload[10]) / 256
+		default:
+			return nil, errInvalidPayload
 		}
 		return &fnfTracking, nil
 	case 2:
@@ -144,7 +159,9 @@ func (r *FNFResponse) ParsePayload() (any, error) {
 		fnfName.Name = string(nameBytes)
 		return &fnfName, nil
 	case 3:
-		// FIXME bounds check
+		if len(r.Payload) < 1 {
+			return nil, errInvalidPayload
+		}
 		var fnfMessage FNFMessage
 		fnfMessage.SubType = r.Payload[0]
 		fnfMessage.Message = string(r.Payload[1:])
@@ -156,7 +173,9 @@ func (r *FNFResponse) ParsePayload() (any, error) {
 		// Landmarks
 		return nil, errors.ErrUnsupported
 	case 7:
-		// FIXME bounds check
+		if len(r.Payload) < 6 {
+			return nil, errInvalidPayload
+		}
 		var fnfGroundTracking FNFGroundTracking
 		fnfGroundTracking.Latitude = parseAbsoluteLatitude(r.Payload[:3])
 		fnfGroundTracking.Longitude = parseAbsoluteLongitude(r.Payload[3:6])
@@ -171,7 +190,7 @@ func (r *FNFResponse) ParsePayload() (any, error) {
 		return nil, errors.ErrUnsupported
 	case 0x0A:
 		if len(r.Payload) < 1 {
-			return nil, errors.New("payload too short")
+			return nil, errInvalidPayload
 		}
 		var fnfHardwareInfo FNFHardwareInfo
 		fnfHardwareInfo.IsPingPongRequest = r.Payload[0]&0x80 != 0

@@ -24,7 +24,7 @@ func TestFNF_ParsePayload(t *testing.T) {
 				OnlineTracking: false,
 				Type:           1,
 				Altitude:       441,
-				Speed:          0,
+				SpeedKPH:       0,
 				Climb:          0,
 				Heading:        196.875,
 			},
@@ -89,6 +89,18 @@ func TestFNF_ParsePayload(t *testing.T) {
 				ReleaseVersion:  fanet.NewOptional(true),
 				BuildDate:       fanet.NewOptional(time.Date(2024, time.March, 8, 0, 0, 0, 0, time.UTC)),
 				Uptime:          fanet.NewOptional(11 * time.Minute),
+			},
+		},
+		{
+			s: "#FNF 11,183F,1,0,1,B,7E869F8E890CE342C88DF5\n",
+			expected: &fanet.FNFTracking{
+				Latitude:  -67.83428105486772,
+				Longitude: 17.630753384975215,
+				Type:      4,
+				Altitude:  739,
+				SpeedKPH:  180,
+				Climb:     6.5,
+				Heading:   344.53125,
 			},
 		},
 	} {
