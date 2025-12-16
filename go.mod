@@ -2,6 +2,8 @@ module github.com/twpayne/go-fanet
 
 go 1.22.4
 
+tool github.com/twpayne/go-fanet/cmd/fanet2json
+
 require (
 	github.com/alecthomas/assert/v2 v2.11.0
 	golang.org/x/text v0.21.0
