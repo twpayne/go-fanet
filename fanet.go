@@ -30,6 +30,7 @@ var ManufacturerNames = map[int]string{
 	0x0A: "FLARM",
 	0x11: "FANET+",
 	0x20: "XC Tracer",
+	0xBA: "Burnair",
 	0xCB: "CloudBuddy",
 	0xE0: "OGN Tracker",
 	0xE4: "4aviation",
