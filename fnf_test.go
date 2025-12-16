@@ -107,7 +107,9 @@ func TestFNF_ParsePayload(t *testing.T) {
 		t.Run(tc.s, func(t *testing.T) {
 			fnf, err := fanet.ParseResponseString(tc.s)
 			assert.NoError(t, err)
-			actual, err := fnf.(*fanet.FNFResponse).ParsePayload()
+			fnfResponse, ok := fnf.(*fanet.FNFResponse)
+			assert.True(t, ok)
+			actual, err := fnfResponse.ParsePayload()
 			if tc.expectedErr != nil {
 				assert.EqualError(t, err, "unsupported operation")
 			} else {

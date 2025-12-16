@@ -1,158 +1,169 @@
+version: "2"
 run:
-  go: '1.22'
-
+  go: "1.22"
 linters:
   enable:
-  - asasalint
-  - asciicheck
-  - bidichk
-  - bodyclose
-  - canonicalheader
-  - containedctx
-  - contextcheck
-  - copyloopvar
-  - decorder
-  - dogsled
-  - dupword
-  - durationcheck
-  - err113
-  - errcheck
-  - errchkjson
-  - errname
-  - errorlint
-  - exhaustive
-  - fatcontext
-  - forbidigo
-  - forcetypeassert
-  - gci
-  - ginkgolinter
-  - gocheckcompilerdirectives
-  - gochecknoinits
-  - gochecksumtype
-  - gocritic
-  - godot
-  - gofmt
-  - gofumpt
-  - goheader
-  - goimports
-  - gomoddirectives
-  - gomodguard
-  - goprintffuncname
-  - gosec
-  - gosimple
-  - gosmopolitan
-  - govet
-  - grouper
-  - iface
-  - importas
-  - inamedparam
-  - ineffassign
-  - interfacebloat
-  - intrange
-  - ireturn
-  - loggercheck
-  - makezero
-  - mirror
-  - misspell
-  - nakedret
-  - nilerr
-  - nilnil
-  - noctx
-  - nolintlint
-  - nosprintfhostport
-  - perfsprint
-  - prealloc
-  - predeclared
-  - promlinter
-  - protogetter
-  - reassign
-  - revive
-  - rowserrcheck
-  - sloglint
-  - spancheck
-  - sqlclosecheck
-  - staticcheck
-  - stylecheck
-  - tagalign
-  - tenv
-  - testableexamples
-  - testifylint
-  - thelper
-  - typecheck
-  - unconvert
-  - unparam
-  - unused
-  - usestdlibvars
-  - wastedassign
-  - whitespace
-  - zerologlint
-  disable:
-  - cyclop
-  - depguard
-  - dupl
-  - exhaustruct
-  - funlen
-  - gochecknoglobals
-  - gocognit
-  - goconst
-  - gocyclo
-  - godox
-  - lll
-  - maintidx
-  - mnd
-  - musttag
-  - nestif
-  - nlreturn
-  - nonamedreturns
-  - paralleltest
-  - recvcheck
-  - tagliatelle
-  - testpackage
-  - tparallel
-  - varnamelen
-  - wrapcheck
-  - wsl
-
-linters-settings:
-  gci:
-    sections:
-    - standard
-    - default
-    - prefix(github.com/twpayne/go-fanet)
-  gofumpt:
-    extra-rules: true
-    module-path: github.com/twpayne/go-fanet
-  goimports:
-    local-prefixes: github.com/twpayne/go-fanet
-  govet:
-    disable:
-    - fieldalignment
-    - shadow
-    enable-all: true
-  ireturn:
-    allow:
-    - anon
-    - empty
-    - error
-    - stdlib
-    - github\.com/twpayne/go-fanet\.Command
-    - github\.com/twpayne/go-fanet\.Response
-  misspell:
-    locale: US
-  stylecheck:
-    checks:
-    - all
-
-issues:
-  include:
-  - EXC0011 # include issues about comments from `stylecheck`
-  exclude-rules:
-  - linters:
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - canonicalheader
+    - containedctx
+    - contextcheck
+    - copyloopvar
+    - decorder
+    - dogsled
+    - dupword
+    - durationcheck
     - err113
-    text: do not define dynamic errors, use wrapped static errors instead
-  - linters:
+    - errchkjson
+    - errname
+    - errorlint
+    - exhaustive
+    - fatcontext
     - forbidigo
-    path: ^cmd/
-  - linters:
+    - forcetypeassert
+    - ginkgolinter
+    - gocheckcompilerdirectives
+    - gochecknoinits
+    - gochecksumtype
+    - gocritic
+    - godot
+    - goheader
+    - gomoddirectives
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - gosmopolitan
+    - grouper
+    - iface
+    - importas
     - inamedparam
-    path: _test\.go$
+    - interfacebloat
+    - intrange
+    - ireturn
+    - loggercheck
+    - makezero
+    - mirror
+    - misspell
+    - nakedret
+    - nilerr
+    - nilnil
+    - noctx
+    - nolintlint
+    - nosprintfhostport
+    - perfsprint
+    - prealloc
+    - predeclared
+    - promlinter
+    - protogetter
+    - reassign
+    - revive
+    - rowserrcheck
+    - sloglint
+    - spancheck
+    - sqlclosecheck
+    - staticcheck
+    - tagalign
+    - testableexamples
+    - testifylint
+    - thelper
+    - unconvert
+    - unparam
+    - usestdlibvars
+    - wastedassign
+    - whitespace
+    - zerologlint
+  disable:
+    - cyclop
+    - depguard
+    - dupl
+    - exhaustruct
+    - funlen
+    - gochecknoglobals
+    - gocognit
+    - goconst
+    - gocyclo
+    - godox
+    - lll
+    - maintidx
+    - mnd
+    - musttag
+    - nestif
+    - nlreturn
+    - nonamedreturns
+    - paralleltest
+    - recvcheck
+    - tagliatelle
+    - testpackage
+    - tparallel
+    - varnamelen
+    - wrapcheck
+    - wsl
+  settings:
+    govet:
+      disable:
+        - fieldalignment
+        - shadow
+      enable-all: true
+    ireturn:
+      allow:
+        - anon
+        - empty
+        - error
+        - stdlib
+        - github\.com/twpayne/go-fanet\.Command
+        - github\.com/twpayne/go-fanet\.Response
+    misspell:
+      locale: US
+    revive:
+      rules:
+        - name: exported
+          disabled: true
+    staticcheck:
+      checks:
+        - all
+  exclusions:
+    generated: lax
+    presets:
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - linters:
+          - err113
+        text: do not define dynamic errors, use wrapped static errors instead
+      - linters:
+          - forbidigo
+        path: ^cmd/
+      - linters:
+          - inamedparam
+        path: _test\.go$
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(github.com/twpayne/go-fanet)
+    gofumpt:
+      module-path: github.com/twpayne/go-fanet
+      extra-rules: true
+    goimports:
+      local-prefixes:
+        - github.com/twpayne/go-fanet
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
